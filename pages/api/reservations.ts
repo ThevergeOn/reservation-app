@@ -1,12 +1,59 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from "@prisma/client";
 
-type Data = {
-  name: string;
-};
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
-  res.status(200).json({ name: "John Doe" });
+  const prisma = new PrismaClient();
+  if (req.method === "POST") {
+    const { name, startTime, endTime } = req.body;
+
+    // Check if the requested reservation time is valid
+    if (
+      new Date(startTime).getHours() < 9 ||
+      new Date(startTime).getHours() >= 17 ||
+      new Date(endTime).getHours() >= 12 ||
+      new Date(startTime) >= new Date(endTime)
+    ) {
+      return res.status(400).json({ message: "Invalid reservation time" });
+    }
+
+    // Check if the requested reservation collides with an existing reservation
+    const collidingReservation = await prisma.reservation.findFirst({
+      where: {
+        NOT: [
+          { endTime: { lte: new Date(startTime) } },
+          { startTime: { gte: new Date(endTime) } },
+        ],
+      },
+    });
+
+    if (collidingReservation) {
+      return res
+        .status(409)
+        .json({
+          message: "Reservation time conflicts with an existing reservation",
+        });
+    }
+
+    // Create the reservation
+    const reservation = await prisma.reservation.create({
+      data: {
+        name,
+        startTime,
+        endTime,
+      },
+    });
+
+    return res.status(201).json(reservation);
+  }
+
+  if (req.method === "GET") {
+    const reservations = await prisma.reservation.findMany();
+
+    return res.status(200).json(reservations);
+  }
+
+  return res.status(405).json({ message: "Method not allowed" });
 }
