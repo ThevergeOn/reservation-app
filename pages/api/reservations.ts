@@ -23,8 +23,8 @@ export default async function handler(
     const collidingReservation = await prisma.reservation.findFirst({
       where: {
         NOT: [
-          { endTime: { lte: new Date(startTime) } },
-          { startTime: { gte: new Date(endTime) } },
+          { end_time: { lte: new Date(startTime) } },
+          { start_time: { gte: new Date(endTime) } },
         ],
       },
     });
