@@ -12,10 +12,10 @@ model User {
   name     String
   email    String   @unique
   password String
- CarReservations CarReservation[]
+ Reservations Reservation[]
 }
 
-model  CarReservation {
+model  Reservation {
   id     Int    @id @default(autoincrement())
   userId   Int
   user      User     @relation(fields: [userId], references: [id])
