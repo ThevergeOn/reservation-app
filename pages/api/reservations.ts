@@ -30,11 +30,9 @@ export default async function handler(
     });
 
     if (collidingReservation) {
-      return res
-        .status(409)
-        .json({
-          message: "Reservation time conflicts with an existing reservation",
-        });
+      return res.status(409).json({
+        message: "Reservation time conflicts with an existing reservation",
+      });
     }
 
     // Create the reservation
@@ -47,13 +45,23 @@ export default async function handler(
     });
 
     return res.status(201).json(reservation);
-  }
-
-  if (req.method === "GET") {
+  } else if (req.method === "GET") {
     const reservations = await prisma.reservation.findMany();
 
     return res.status(200).json(reservations);
+  } else if (req.method === "PUT") {
+    const { id, name, start, end } = req.body;
+    const reservation = await prisma.reservation.update({
+      where: { id },
+      data: { name, start, end },
+    });
+    res.status(200).json(reservation);
+  } else if (req.method === "DELETE") {
+    const { id } = req.body;
+    await prisma.reservation.delete({ where: { id } });
+    res.status(204).end();
+  } else {
+    res.status(405).json({ message: "Method not allowed" });
   }
-
-  return res.status(405).json({ message: "Method not allowed" });
 }
+
