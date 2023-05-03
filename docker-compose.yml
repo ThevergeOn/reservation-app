@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db:
-    image: postgres:latest
+    image: bitnami/postgresql:latest
     environment:
       POSTGRES_USER: reserveapp
       POSTGRES_PASSWORD: my3TrON6ao8sdu
