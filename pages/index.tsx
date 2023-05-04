@@ -1,7 +1,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-
+import Reservation from "../components/ReservationCalendar"
 export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -16,6 +16,7 @@ export default function Home() {
     >
       <nav>d</nav>
       hello world
+      <Reservation/>
     </main>
   );
 }
