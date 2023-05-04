@@ -1,4 +1,4 @@
-import { signIn } from 'next-auth/react'
+import { signIn,useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 
@@ -10,6 +10,7 @@ type LoginFormInputs = {
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>()
   const router = useRouter()
+  const {data:session}=useSession()
 
   const onSubmit = async ({ email, password }: LoginFormInputs) => {
     const result = await signIn('email', {
@@ -18,15 +19,23 @@ export default function LoginPage() {
       password,
     })
     console.log(result)
-    if (result.error) {
-      alert(result.error)
-    } else {
-      router.push('/')
-    }
+    // if (result.error) {
+    //   alert(result.error)
+    // } else {
+    //   router.push('/')
+    // }
   }
+// if(session){
+//   return(
+//    <div>welcome {session.user.email}</div>
 
+//   )
+
+// }else{
+//   <div>you are not signed in</div>
+// }
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex flex -col justify-center items-center h-screen bg-gray-100">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-10 rounded shadow-md"
@@ -64,6 +73,7 @@ export default function LoginPage() {
         >
           Sign In
         </button>
+        <button onClick={async() => { await signIn()}}>Sign in with Your google</button>
       </form>
     </div>
   )

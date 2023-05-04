@@ -20,11 +20,11 @@ export default function SignupPage() {
       callbackUrl: `${window.location.origin}/`,
     })
     console.log(result)
-    if (result.error) {
-      alert(result.error)
-    } else {
-      router.push('/')
-    }
+    // if (result.error) {
+    //   alert(result.error)
+    // } else {
+    //   router.push('/')
+    // }
   }
 
   return (
