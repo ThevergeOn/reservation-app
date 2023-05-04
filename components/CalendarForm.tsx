@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-type CalendarFormData = {
+type FormValues = {
   date: Date;
   time: string;
 };
@@ -14,80 +16,64 @@ const schema = yup.object().shape({
 });
 
 export default function CalendarForm() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CalendarFormData>({
+  } = useForm<FormValues>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: CalendarFormData) => {
-    console.log(data);
-    setIsSubmitted(true);
+  const [time, setTime] = useState<Date>(new Date());
+
+  const registerTime = ({ onChange, ...rest }) => {
+    return (
+      <input
+        {...rest}
+        type="time"
+        value={time.toISOString().slice(0, -8)}
+        onChange={(e) => {
+          const [hour, minute] = e.target.value.split(':');
+          const newTime = new Date();
+          newTime.setHours(parseInt(hour), parseInt(minute));
+          setTime(newTime);
+          onChange(newTime);
+        }}
+      />
+    );
   };
 
-  if (isSubmitted) {
-    return (
-      <div>
-        <p>Thank you for your submission!</p>
-      </div>
-    );
-  }
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2" htmlFor="date">
-          Date
-        </label>
+      <div>
+        <label htmlFor="date">Date</label>
         <Controller
           name="date"
           control={control}
+          defaultValue={selectedDate}
           render={({ field }) => (
-            <input
-              {...field}
-              type="date"
-              className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                errors.date ? "border-red-500" : ""
-              }`}
+            <Calendar
+              onChange={(date) => {
+                field.onChange(date);
+                setSelectedDate(date as Date);
+              }}
+              value={selectedDate}
             />
           )}
         />
-        {errors.date && (
-          <p className="text-red-500 text-xs italic">{errors.date.message}</p>
-        )}
+        {errors.date && <span>This field is required</span>}
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2" htmlFor="time">
-          Time
-        </label>
-        <Controller
-          name="time"
-          control={control}
-          render={({ field }) => (
-            <input
-              {...field}
-              type="time"
-              className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                errors.time ? "border-red-500" : ""
-              }`}
-            />
-          )}
-        />
-        {errors.time && (
-          <p className="text-red-500 text-xs italic">{errors.time.message}</p>
-        )}
+      <div>
+        <label htmlFor="time">Time</label>
+        <Controller name="time" control={control} defaultValue={time} render={({ field }) => registerTime(field)} />
+        {errors.time && <span>This field is required</span>}
       </div>
-      <div className="flex items-center justify-between">
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Submit
-        </button>
-      </div>
+      <button type="submit">Submit</button>
     </form>
   );
 }
