@@ -1,0 +1,98 @@
+.react-calendar {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    width:600px !important;
+  }
+  
+  .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  
+  .react-calendar__navigation button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding:0.25rem
+  }
+
+  
+  .react-calendar__navigation button:hover {
+    color: #0070f3;
+    cursor:not-allowed
+  }
+  
+  .react-calendar__navigation button:disabled:hover {
+    color: #999;
+  }
+  
+  .react-calendar__navigation__label {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .react-calendar__month-view__weekdays {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: #999;
+    text-transform: uppercase;
+  }
+  
+  .react-calendar__month-view__weekdays__weekday {
+    flex-basis: calc(100% / 7);
+    text-align: center;
+  }
+  
+  .react-calendar__month-view__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(2rem, auto);
+    gap: 0.25rem;
+  }
+  
+  .react-calendar__month-view__days__day--weekend {
+    color: #999;
+  }
+  
+  .react-calendar__month-view__days__day--neighboringMonth {
+    color: #ccc;
+  }
+  
+  .react-calendar__tile {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  
+  .react-calendar__tile:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .react-calendar__tile--active,
+  .react-calendar__tile--active:hover {
+    background-color: #0070f3;
+    color: #fff;
+  }
+  
+  .react-calendar__tile--active:disabled,
+  .react-calendar__tile--active:hover:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+  .react-calendar__viewContainer{
+    
+  }
